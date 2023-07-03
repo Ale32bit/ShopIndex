@@ -1,0 +1,41 @@
+﻿@page "/"
+@using Microsoft.EntityFrameworkCore;
+@using ShopIndex.Data
+@using ShopIndex.Models;
+@inject IDbContextFactory<DataContext> DbFactory
+
+<PageTitle>Recent shops</PageTitle>
+
+<h1>Recent shops</h1>
+
+@if (busy)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        @foreach (var shop in shops)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <ShopCard Shop="shop" />
+            </div>
+
+        }
+    </div>
+}
+
+@code {
+    private bool busy;
+    private Models.Shop[] shops;
+
+    protected override async Task OnInitializedAsync()
+    {
+        busy = true;
+        using var db = DbFactory.CreateDbContext();
+
+        shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-12)).OrderByDescending(q => q.LastUpdate).ToArrayAsync();
+
+        busy = false;
+    }
+}

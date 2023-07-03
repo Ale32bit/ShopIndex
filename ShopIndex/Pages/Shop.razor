@@ -1,0 +1,118 @@
+﻿@page "/shop/{UID}"
+@using Humanizer;
+@using Microsoft.EntityFrameworkCore;
+@using ShopIndex.Data;
+@inject IDbContextFactory<DataContext> DbFactory
+@inject IJSRuntime JSRuntime
+
+@if (Data is null)
+{
+    <PageTitle>Shop not found</PageTitle>
+    <h3>Shop not found! :(</h3>
+}
+else
+{
+    <PageTitle>@Data.Name</PageTitle>
+    <h3>
+        @Data.Name
+        @if (Data.Owner != null)
+        {
+            <span class="fs-6 text-secondary"> by @Data.Owner</span>
+        }
+    </h3>
+
+    <p class="fs-5 my-1">@Data.Description</p>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 fw-bold">Last seen</div>
+                <div class="col-sm-12 col-md-6">@Data.LastUpdate.Humanize(utcDate: true)</div>
+
+                <div class="col-sm-12 col-md-6 fw-bold">First seen</div>
+                <div class="col-sm-12 col-md-6">@Data.FirstSeen.Humanize(utcDate: true)</div>
+
+                @if (Data.Software != null)
+                {
+                    <div class="col-sm-12 col-md-6 fw-bold">Software</div>
+                    <div class="col-sm-12 col-md-6">@Data.Software</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4>Location</h4>
+
+    @if (Data.Location != null)
+    {
+        <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@Coords[0]&y=@Coords[1]&z=@Coords[2]">DynMap</a>
+        <button class="btn btn-primary btn-sm" target="_blank" @onclick="CopyTrack">&bsol;track</button>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 fw-bold">Coordinates</div>
+                    <div class="col-sm-12 col-md-6">@Data.Location</div>
+
+                    <div class="col-sm-12 col-md-6 fw-bold">Dimension</div>
+                    <div class="col-sm-12 col-md-6">@Data.LocationDimension</div>
+
+                    <div class="col-sm-12 col-md-6 fw-bold">Description</div>
+                    <div class="col-sm-12 col-md-6">@Data.LocationDescription</div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Not provided.</p>
+    }
+
+    <hr />
+
+    <h4>Items</h4>
+
+    <div class="row">
+        @foreach (var item in Items)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <ItemCard Shop="Data" Item="item" Clickable=false />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? UID { get; set; }
+    public Models.Shop? Data { get; set; }
+    public List<Models.ShopItem> Items { get; set; }
+    public string[] Coords { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = DbFactory.CreateDbContext();
+
+        Data = await db.Shops.FirstOrDefaultAsync(q => q.UID == UID);
+        if (Data == null)
+            return;
+
+        Items = await db.Items
+        .Where(q => q.ShopId == Data.Id)
+        .OrderBy(q => q.Stock == 0)
+        .ThenBy(q => q.Name)
+        .ToListAsync();
+
+        if (Data.Location != null)
+        {
+            Coords = Data.Location.Split(' ');
+        }
+    }
+
+    private async Task CopyTrack()
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", @$"\track {Coords[0]} {Coords[1]} {Coords[2]}");
+    }
+}

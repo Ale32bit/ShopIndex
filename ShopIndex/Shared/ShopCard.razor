@@ -1,0 +1,21 @@
+﻿@using Humanizer;
+@using ShopIndex.Models;
+<div class="card m-1">
+    <div class="card-body">
+        <h5 class="card-title">@Shop.Name <span class="text-body-secondary fs-6">by @Shop.Owner</span></h5>
+        <h6 class="card-subtitle mb-2">Updated @Shop.LastUpdate.Humanize(utcDate: true)</h6>
+        <p class="card-text">@Shop.Description</p>
+        
+        <a href="/shop/@Shop.UID" class="btn btn-primary btn-sm me-1">Details</a>
+        @if (!string.IsNullOrWhiteSpace(Shop.Location))
+        {
+            var coords = Shop.Location.Split(' ');
+            <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">Locate</a>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Shop Shop { get; set; }
+}

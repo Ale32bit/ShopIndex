@@ -1,0 +1,42 @@
+﻿@using ShopIndex.Models;
+<div class="card m-1 @(Item.Stock == 0 ? "bg-body-secondary" : "")">
+    <div class="row g-0">
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title m-0 p-0">@Item.Name</h5>
+
+                @if (Clickable)
+                {
+                    <a href="/shop/@Shop.UID" class="text-body-secondary stretched-link fs-6 m-0 mb-1 p-0">@Shop.Name</a>
+                }
+                else
+                {
+                    <p class="text-body-secondary fs-6 m-0 mb-1 p-0">@Shop.Name</p>
+                }
+
+                @foreach (var price in Item.GetPrices())
+                {
+                    <h6 class="card-subtitle mb-2">@price.Price @price.Currency</h6>
+                }
+                <p class="card-text">Stock: <span class="@(Item.Stock == 0 ? "text-danger" : "")">@Item.Stock</span></p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="position-relative top-50 start-50 translate-middle">
+                <img src="/assets/items/@(Item.Item.Replace(':', '/')).png"
+                     class="img-fluid" alt="@Item.Item">
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Shop Shop { get; set; }
+
+    [Parameter]
+    public ShopItem Item { get; set; }
+
+    [Parameter]
+    public bool Clickable { get; set; } = true;
+}
