@@ -2,6 +2,7 @@
 @using Humanizer;
 @using Microsoft.EntityFrameworkCore;
 @using ShopIndex.Data;
+@using static ShopIndex.Shared.ItemsFilter;
 @inject IDbContextFactory<DataContext> DbFactory
 @inject IJSRuntime JSRuntime
 
@@ -74,8 +75,11 @@ else
 
     <h4>Items</h4>
 
+    <ItemsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
+    @bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
+
     <div class="row">
-        @foreach (var item in Items)
+        @foreach (var item in GetList())
         {
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <ItemCard Shop="Data" Item="item" Clickable=false />
@@ -90,6 +94,39 @@ else
     public Models.Shop? Data { get; set; }
     public List<Models.ShopItem> Items { get; set; }
     public string[] Coords { get; set; }
+
+    public string SearchText { get; set; } = "";
+    public FilterSort FilterSort { get; set; } = FilterSort.None;
+
+    private IEnumerable<Models.ShopItem> GetList()
+    {
+        var newList = Items
+        .Where(q =>
+            q.Name.ToLower().Contains(SearchText.ToLower())
+            || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .OrderBy(q => q.Stock == 0);
+
+        switch (FilterSort)
+        {
+            case FilterSort.LowPrice:
+                newList = newList.ThenBy(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.HighPrice:
+                newList = newList.ThenByDescending(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.LowStock:
+                newList = newList.ThenBy(q => q.Stock);
+                break;
+            case FilterSort.HighStock:
+                newList = newList.ThenByDescending(q => q.Stock);
+                break;
+            case FilterSort.Alphabetical:
+                newList = newList.ThenBy(q => q.Name);
+                break;
+        }
+
+        return newList;
+    }
 
     protected override async Task OnInitializedAsync()
     {
