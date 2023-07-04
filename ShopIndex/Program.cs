@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using ShopIndex.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,5 +34,10 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.MapControllers();
+
+var dbFactory = app.Services.GetRequiredService<IDbContextFactory<DataContext>>();
+using var db = await dbFactory.CreateDbContextAsync();
+await db.Database.MigrateAsync();
+await db.DisposeAsync();
 
 app.Run();
