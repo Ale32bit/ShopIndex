@@ -14,7 +14,7 @@ namespace ShopIndex.API
     [ApiController]
     public class SentryController : ControllerBase
     {
-        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
         {
 
         };
@@ -25,12 +25,6 @@ namespace ShopIndex.API
         {
             _configuration = configuration;
             _context = context;
-        }
-
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok("Hello");
         }
 
         [HttpPost]
@@ -92,6 +86,9 @@ namespace ShopIndex.API
                 shopItem.Name = item.Item.DisplayName;
                 shopItem.Stock = item.Stock ?? -1;
                 shopItem.PricesString = Models.ShopItem.MakePricesString(item.Prices);
+                shopItem.DynamicPrices = item.DynamicPrice;
+                shopItem.MadeOnDemand = item.MadeOnDemand;
+                shopItem.ShopBuysItem = item.ShopBuysItem;
 
                 updatedItems.Add(shopItem.Hash);
                 _context.Items.Update(shopItem);

@@ -10,7 +10,8 @@
 <h1>Catalogue</h1>
 
 <ItemsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
-@bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
+@bind-Sort="FilterSort" @bind-Sort:event="OnSort"
+@bind-SellOnly="SellOnly" @bind-SellOnly:event="OnSellOnlyChange" />
 
 @if (busy)
 {
@@ -34,13 +35,15 @@ else
 
     private string SearchText { get; set; } = "";
     private FilterSort FilterSort { get; set; } = FilterSort.None;
+    private bool SellOnly { get; set; } = false;
 
     private IEnumerable<ShopItem> GetList()
     {
         var newList = ItemList
-        .Where(q =>
-            q.Name.ToLower().Contains(SearchText.ToLower())
-            || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .Where(q =>
+                q.Name.ToLower().Contains(SearchText.ToLower())
+                || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .Where(q => SellOnly ? q.ShopBuysItem : true)
             .OrderBy(q => q.Stock == 0);
 
         switch (FilterSort)

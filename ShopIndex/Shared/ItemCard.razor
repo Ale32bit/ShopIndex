@@ -3,7 +3,26 @@
     <div class="row g-0">
         <div class="col-md-9">
             <div class="card-body">
-                <h5 class="card-title m-0 p-0">@Item.Name</h5>
+
+                <h5 class="card-title m-0 p-0">
+                    @Item.Name
+                </h5>
+
+                @if (Item.ShopBuysItem)
+                {
+                    <span class="badge rounded-pill bg-danger small position-absolute top-0 end-0 m-1 z-2"
+                          title="This shop buys items">
+                        SELL
+                    </span>
+                }
+
+                @if (Item.DynamicPrices)
+                {
+                    <span class="badge rounded-pill bg-primary small position-absolute bottom-0 end-0 m-1 z-2"
+                          title="Price may change">
+                        Dynamic price
+                    </span>
+                }
 
                 @if (Clickable)
                 {
@@ -24,7 +43,7 @@
         <div class="col-md-3">
             <div class="position-relative top-50 start-50 translate-middle">
                 <img src="/assets/items/@(Item.Item.Replace(':', '/')).png"
-                     class="img-fluid" alt="@Item.Item">
+                     class="img-fluid" alt="@Item.Item" title="@Item.Item">
             </div>
         </div>
     </div>

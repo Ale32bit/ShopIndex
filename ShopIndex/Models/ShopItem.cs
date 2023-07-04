@@ -15,6 +15,9 @@ public class ShopItem
     public string Hash => GetItemHash(Item, NBT);
     public int Stock { get; set; } = -1;
     public string PricesString { get; set; } = "";
+    public bool DynamicPrices { get; set; } = false;
+    public bool MadeOnDemand { get; set; } = false;
+    public bool ShopBuysItem { get; set; } = false;
     public IEnumerable<ItemPrice> GetPrices() => GetPrices(PricesString);
 
     public virtual Shop Shop { get; set; }

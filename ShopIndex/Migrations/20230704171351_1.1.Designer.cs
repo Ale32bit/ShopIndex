@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopIndex.Data;
 
@@ -10,9 +11,11 @@ using ShopIndex.Data;
 namespace ShopIndex.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230704171351_1.1")]
+    partial class _11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,15 +76,9 @@ namespace ShopIndex.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("DynamicPrices")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Item")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("MadeOnDemand")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NBT")
                         .HasColumnType("TEXT");
@@ -93,9 +90,6 @@ namespace ShopIndex.Migrations
                     b.Property<string>("PricesString")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("ShopBuysItem")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ShopId")
                         .HasColumnType("INTEGER");

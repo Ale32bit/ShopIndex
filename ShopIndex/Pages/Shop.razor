@@ -75,7 +75,8 @@ else
     <h4>Items</h4>
 
     <ItemsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
-    @bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
+    @bind-Sort="FilterSort" @bind-Sort:event="OnSort"
+    @bind-SellOnly="SellOnly" @bind-SellOnly:event="OnSellOnlyChange" />
 
     <div class="row">
         @foreach (var item in GetList())
@@ -96,13 +97,15 @@ else
 
     public string SearchText { get; set; } = "";
     public FilterSort FilterSort { get; set; } = FilterSort.None;
+    private bool SellOnly { get; set; } = false;
 
     private IEnumerable<Models.ShopItem> GetList()
     {
         var newList = Items
-        .Where(q =>
-            q.Name.ToLower().Contains(SearchText.ToLower())
-            || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .Where(q =>
+                q.Name.ToLower().Contains(SearchText.ToLower())
+                || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .Where(q => SellOnly ? q.ShopBuysItem : true)
             .OrderBy(q => q.Stock == 0);
 
         switch (FilterSort)
