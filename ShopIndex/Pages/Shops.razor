@@ -19,7 +19,7 @@
 else
 {
     <div class="row">
-        @foreach (var shop in shops)
+        @foreach (var shop in GetList())
         {
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <ShopCard Shop="shop" />
@@ -31,7 +31,7 @@ else
 
 @code {
     private bool busy;
-    private IEnumerable<Models.Shop> shops;
+    private IList<Models.Shop> shops;
 
     private string SearchText { get; set; } = "";
     private ShopFilterSort FilterSort { get; set; } = ShopFilterSort.LastUpdate;
@@ -55,12 +55,44 @@ else
         return newList;
     }
 
+    /*public static string RandomString(int length)
+    {
+        const string chars = "abcdefghijklmnopqrstuvxywz0123456789 ";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
+    }*/
+
     protected override async Task OnInitializedAsync()
     {
         busy = true;
+
         using var db = DbFactory.CreateDbContext();
 
         shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-12)).OrderByDescending(q => q.LastUpdate).ToListAsync();
+
+        // Development code
+        /*if (shops == null)
+        {
+            shops = new List<Models.Shop>();
+            for (int i = 0; i < 20; i++)
+            {
+                shops.Add(new()
+                    {
+                        ComputerId = Random.Shared.Next(),
+                        Name = RandomString(16),
+                        Description = Random.Shared.Next(2) == 1 ? "I am a description" : null,
+                        FirstSeen = DateTime.UtcNow.AddDays(-10),
+                        LastUpdate = DateTime.UtcNow.AddSeconds(-Random.Shared.Next(0, 45)),
+                        UID = Random.Shared.Next().ToString(),
+                        Owner = "Shop Owner",
+                        Software = "Shop software 2000",
+                        Id = 0,
+                        Location = "0 0 0",
+                        LocationDescription = "In the mall",
+                        LocationDimension = "overworld",
+                    });
+            }
+        }*/
 
         busy = false;
     }

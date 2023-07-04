@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/font-awesome/css/all.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="ShopIndex.styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -31,6 +31,17 @@
     </div>
     -->
 
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.server.js"></script>
+
+    <script>
+        function loadBootstrap() {
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        }
+    </script>
 </body>
 </html>

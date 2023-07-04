@@ -4,7 +4,6 @@
 @using ShopIndex.Data;
 @using static ShopIndex.Shared.ItemsFilter;
 @inject IDbContextFactory<DataContext> DbFactory
-@inject IJSRuntime JSRuntime
 
 @if (Data is null)
 {
@@ -49,7 +48,7 @@ else
     @if (Data.Location != null)
     {
         <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@Coords[0]&y=@Coords[1]&z=@Coords[2]">DynMap</a>
-        <button class="btn btn-primary btn-sm" target="_blank" @onclick="CopyTrack">&bsol;track</button>
+        <CopyClipboard Value="@(@$"\track {Coords[0]} {Coords[1]} {Coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard>
 
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
@@ -146,10 +145,5 @@ else
         {
             Coords = Data.Location.Split(' ');
         }
-    }
-
-    private async Task CopyTrack()
-    {
-        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", @$"\track {Coords[0]} {Coords[1]} {Coords[2]}");
     }
 }
