@@ -2,28 +2,15 @@
 @using Microsoft.EntityFrameworkCore;
 @using ShopIndex.Data
 @using ShopIndex.Models;
+@using static ShopIndex.Shared.ItemsFilter;
 @inject IDbContextFactory<DataContext> DbFactory
 
 <PageTitle>Catalogue</PageTitle>
 
 <h1>Catalogue</h1>
 
-<div class="card m-1">
-    <div class="card-body">
-        <h5 class="card-title">Filter</h5>
-        <div class="input-group mb-3">
-            <span class="input-group-text"><span class="oi oi-magnifying-glass" aria-hidden="true"></span></span>
-            <input type="text" class="form-control" placeholder="Search item..." aria-label="Search item" @bind-value="SearchText" @bind-value:event="oninput">
-        </div>
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="cheapSort" @bind-value="OrderByPrice" @bind-value:event="onchange">
-            <label class="form-check-label" for="cheapSort">Sort by cheapest price</label>
-        </div>
-    </div>
-</div>
-
-
+<ItemsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
+@bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
 
 @if (busy)
 {
@@ -43,20 +30,36 @@ else
 
 @code {
     private bool busy;
-    string SearchText { get; set; } = "";
-    bool OrderByPrice { get; set; } = false;
     List<ShopItem> ItemList { get; set; } = new List<ShopItem>();
+
+    private string SearchText { get; set; } = "";
+    private FilterSort FilterSort { get; set; } = FilterSort.None;
 
     private IEnumerable<ShopItem> GetList()
     {
         var newList = ItemList
         .Where(q =>
             q.Name.ToLower().Contains(SearchText.ToLower())
-            || q.Item.ToLower().Contains(SearchText.ToLower()));
+            || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .OrderBy(q => q.Stock == 0);
 
-        if(OrderByPrice)
+        switch (FilterSort)
         {
-            newList = newList.OrderBy(q => q.Stock == 0).ThenBy(q => q.GetPrices().OrderBy(q => q).First().Price);
+            case FilterSort.LowPrice:
+                newList = newList.ThenBy(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.HighPrice:
+                newList = newList.ThenByDescending(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.LowStock:
+                newList = newList.ThenBy(q => q.Stock);
+                break;
+            case FilterSort.HighStock:
+                newList = newList.ThenByDescending(q => q.Stock);
+                break;
+            case FilterSort.Alphabetical:
+                newList = newList.ThenBy(q => q.Name);
+                break;
         }
 
         return newList;
@@ -70,10 +73,8 @@ else
 
         ItemList = await db.Items
             .Include(s => s.Shop)
-            .Where(q => q.Shop.LastUpdate > DateTime.UtcNow.AddHours(-12))
-            .OrderBy(q => q.Stock == 0)
-            .ThenByDescending(q => q.Shop.LastUpdate)
-            .ThenBy(q => q.Name)
+            .Where(q => q.Shop.LastUpdate > DateTime.UtcNow.AddHours(-48))
+            .OrderByDescending(q => q.Shop.LastUpdate)
             .ToListAsync();
 
         busy = false;
