@@ -1,0 +1,79 @@
+﻿<div class="card m-1">
+    <div class="card-body">
+        <h5 class="card-title">Filter</h5>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+                    <input type="text" class="form-control" placeholder="Search shop..." aria-label="Search shop" @bind-value="SearchText" @bind-value:event="oninput">
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-2">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="sortSelect"><i class="fa-solid fa-sort"></i></label>
+                    <select id="sortSelect" class="form-select" aria-label="Sort shops by" @bind="Sort">
+                        <option selected value="None" disabled>Sort shops</option>
+                        @foreach (var sortPair in FilterSortLocale)
+                        {
+                            <option value="@sortPair.Key">@sortPair.Value</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _searchText = "";
+
+    [Parameter]
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (value == _searchText)
+                return;
+            _searchText = value;
+            if (OnSearchInput.HasDelegate)
+                OnSearchInput.InvokeAsync(SearchText);
+        }
+    }
+
+    private ShopFilterSort _filterSort = ShopFilterSort.LastUpdate;
+
+    [Parameter]
+    public ShopFilterSort Sort
+    {
+        get => _filterSort;
+        set
+        {
+            if (value == _filterSort)
+                return;
+            _filterSort = value;
+            if (OnSort.HasDelegate)
+                OnSort.InvokeAsync(_filterSort);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> OnSearchInput { get; set; }
+
+    [Parameter]
+    public EventCallback<ShopFilterSort> OnSort { get; set; }
+
+    public enum ShopFilterSort
+    {
+        LastUpdate,
+        Alphabetical
+    }
+
+    private static Dictionary<ShopFilterSort, string> FilterSortLocale = new()
+        {
+            [ShopFilterSort.LastUpdate] = "Last update",
+            [ShopFilterSort.Alphabetical] = "Name",
+        };
+
+}

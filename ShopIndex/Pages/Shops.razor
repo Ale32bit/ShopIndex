@@ -2,11 +2,15 @@
 @using Microsoft.EntityFrameworkCore;
 @using ShopIndex.Data
 @using ShopIndex.Models;
+@using static ShopIndex.Shared.ShopsFilter;
 @inject IDbContextFactory<DataContext> DbFactory
 
 <PageTitle>Recent shops</PageTitle>
 
 <h1>Recent shops</h1>
+
+<ShopsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
+@bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
 
 @if (busy)
 {
@@ -27,14 +31,36 @@ else
 
 @code {
     private bool busy;
-    private Models.Shop[] shops;
+    private IEnumerable<Models.Shop> shops;
+
+    private string SearchText { get; set; } = "";
+    private ShopFilterSort FilterSort { get; set; } = ShopFilterSort.LastUpdate;
+
+    private IEnumerable<Models.Shop> GetList()
+    {
+        var newList = shops
+        .Where(q =>
+            q.Name.ToLower().Contains(SearchText.ToLower()));
+
+        switch (FilterSort)
+        {
+            case ShopFilterSort.LastUpdate:
+                newList = newList.OrderByDescending(q => q.LastUpdate);
+                break;
+            case ShopFilterSort.Alphabetical:
+                newList = newList.OrderBy(q => q.Name);
+                break;
+        }
+
+        return newList;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         busy = true;
         using var db = DbFactory.CreateDbContext();
 
-        shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-12)).OrderByDescending(q => q.LastUpdate).ToArrayAsync();
+        shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-12)).OrderByDescending(q => q.LastUpdate).ToListAsync();
 
         busy = false;
     }
