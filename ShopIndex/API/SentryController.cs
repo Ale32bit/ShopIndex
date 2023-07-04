@@ -45,11 +45,12 @@ namespace ShopIndex.API
             if (data.Data.Type != "ShopSync")
                 return BadRequest();
 
-            var shop = await _context.Shops.FirstOrDefaultAsync(q => q.UID == data.GetUID());
+            var sourceUID = data.GetUID();
+            var shop = await _context.Shops.FirstOrDefaultAsync(q => q.UID == sourceUID);
             shop ??= new Shop()
             {
                 UID = data.GetUID(),
-                ComputerId = data.ComputerId,
+                ComputerId = data.Data.Info.ComputerID ?? data.ComputerId,
                 FirstSeen = DateTime.UtcNow,
             };
 

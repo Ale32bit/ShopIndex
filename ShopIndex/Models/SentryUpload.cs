@@ -6,6 +6,7 @@ public class SentryUpload
     public ShopSync.ShopSync Data { get; set; }
     public string GetUID()
     {
-        return $"{ComputerId}:{Data.Info.MultiShop ?? 0}";
+        int computerId = Data.Info.ComputerID ?? ComputerId;
+        return $"{computerId}:{Data.Info.MultiShop ?? 0}";
     }
 }
