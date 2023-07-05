@@ -5,6 +5,7 @@ using ShopIndex.Data;
 using ShopIndex.Models;
 using ShopIndex.Models.ShopSync;
 using System.Data;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -14,10 +15,7 @@ namespace ShopIndex.API
     [ApiController]
     public class SentryController : ControllerBase
     {
-        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
-        {
-
-        };
+        public static readonly Dictionary<string, SentryUpload> Dumps = new();
 
         private readonly IConfiguration _configuration;
         private readonly DataContext _context;
@@ -25,6 +23,15 @@ namespace ShopIndex.API
         {
             _configuration = configuration;
             _context = context;
+        }
+
+        [HttpGet("dump/{uid}")]
+        public IActionResult DumpShop(string uid)
+        {
+            if (!Dumps.ContainsKey(uid))
+                return NotFound();
+
+            return new JsonResult(Dumps[uid]);
         }
 
         [HttpPost]
@@ -40,6 +47,8 @@ namespace ShopIndex.API
                 return BadRequest();
 
             var sourceUID = data.GetUID();
+            Dumps[sourceUID] = data;
+            
             var shop = await _context.Shops.FirstOrDefaultAsync(q => q.UID == sourceUID);
             shop ??= new Shop()
             {
@@ -73,7 +82,7 @@ namespace ShopIndex.API
             var updatedItems = new List<string>();
             foreach (var item in data.Data.Items)
             {
-                var hash = Models.ShopItem.GetItemHash(item.Item.Name, item.Item.NBT, item.DynamicPrice, item.MadeOnDemand, item.ShopBuysItem);
+                var hash = Models.ShopItem.GetItemHash(item.Item.DisplayName, item.Item.Name, item.Item.NBT, item.DynamicPrice, item.MadeOnDemand, item.ShopBuysItem);
 
                 var shopItem = dbItems.FirstOrDefault(q => q.Hash == hash);
                 shopItem ??= new Models.ShopItem

@@ -12,7 +12,7 @@ public class ShopItem
     public string Name { get; set; }
     public string Item { get; set; }
     public string? NBT { get; set; }
-    public string Hash => GetItemHash(Item, NBT, DynamicPrices, MadeOnDemand, ShopBuysItem);
+    public string Hash => GetItemHash(Name, Item, NBT, DynamicPrices, MadeOnDemand, ShopBuysItem);
     public int Stock { get; set; } = -1;
     public string PricesString { get; set; } = "";
     public bool DynamicPrices { get; set; } = false;
