@@ -24,7 +24,6 @@ public class ShopItem
     public static string GetItemHash(params object?[] pars)
     {
         var str = string.Join(':', pars);
-        Console.WriteLine(str);
         return Convert.ToHexString(
             SHA256.HashData(Encoding.UTF8.GetBytes(str))
         );
