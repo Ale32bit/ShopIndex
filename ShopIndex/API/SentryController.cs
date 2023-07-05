@@ -73,7 +73,7 @@ namespace ShopIndex.API
             var updatedItems = new List<string>();
             foreach (var item in data.Data.Items)
             {
-                var hash = Models.ShopItem.GetItemHash(item.Item.Name, item.Item.NBT);
+                var hash = Models.ShopItem.GetItemHash(item.Item.Name, item.Item.NBT, item.DynamicPrice, item.MadeOnDemand, item.ShopBuysItem);
 
                 var shopItem = dbItems.FirstOrDefault(q => q.Hash == hash);
                 shopItem ??= new Models.ShopItem

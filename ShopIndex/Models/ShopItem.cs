@@ -12,7 +12,7 @@ public class ShopItem
     public string Name { get; set; }
     public string Item { get; set; }
     public string? NBT { get; set; }
-    public string Hash => GetItemHash(Item, NBT);
+    public string Hash => GetItemHash(Item, NBT, DynamicPrices, MadeOnDemand, ShopBuysItem);
     public int Stock { get; set; } = -1;
     public string PricesString { get; set; } = "";
     public bool DynamicPrices { get; set; } = false;
@@ -21,10 +21,12 @@ public class ShopItem
     public IEnumerable<ItemPrice> GetPrices() => GetPrices(PricesString);
 
     public virtual Shop Shop { get; set; }
-    public static string GetItemHash(string itemName, string? nbtHash)
+    public static string GetItemHash(params object?[] pars)
     {
+        var str = string.Join(':', pars);
+        Console.WriteLine(str);
         return Convert.ToHexString(
-            SHA256.HashData(Encoding.UTF8.GetBytes($"{itemName}:{nbtHash ?? ""}"))
+            SHA256.HashData(Encoding.UTF8.GetBytes(str))
         );
     }
 

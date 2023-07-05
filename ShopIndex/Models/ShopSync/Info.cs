@@ -9,5 +9,5 @@ public class Info
     public int? MultiShop { get; set; }
     public Software? Software { get; set; }
     public Location? Location { get; set; }
-    public IEnumerable<Location>? OtherLocations { get; set; }
+    public IEnumerable<Location>? OtherLocations { get; set; } = Enumerable.Empty<Location>();
 }
