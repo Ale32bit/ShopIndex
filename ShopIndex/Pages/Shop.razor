@@ -49,26 +49,22 @@ else
     {
         <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@Coords[0]&y=@Coords[1]&z=@Coords[2]">DynMap</a>
         <CopyClipboard Value="@(@$"\track {Coords[0]} {Coords[1]} {Coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard>
+    }
 
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <div class="row">
-                    <div class="col-sm-12 col-md-6 fw-bold">Coordinates</div>
-                    <div class="col-sm-12 col-md-6">@Data.Location</div>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 fw-bold">Coordinates</div>
+                <div class="col-sm-12 col-md-6">@(Data.Location ?? "No data")</div>
 
-                    <div class="col-sm-12 col-md-6 fw-bold">Dimension</div>
-                    <div class="col-sm-12 col-md-6">@Data.LocationDimension</div>
+                <div class="col-sm-12 col-md-6 fw-bold">Dimension</div>
+                <div class="col-sm-12 col-md-6">@(Data.LocationDimension ?? "No data")</div>
 
-                    <div class="col-sm-12 col-md-6 fw-bold">Description</div>
-                    <div class="col-sm-12 col-md-6">@Data.LocationDescription</div>
-                </div>
+                <div class="col-sm-12 col-md-6 fw-bold">Description</div>
+                <div class="col-sm-12 col-md-6">@(Data.LocationDescription ?? "No data")</div>
             </div>
         </div>
-    }
-    else
-    {
-        <p>Not provided.</p>
-    }
+    </div>
 
     <hr />
 
