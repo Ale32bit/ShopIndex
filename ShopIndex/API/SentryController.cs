@@ -65,7 +65,8 @@ namespace ShopIndex.API
 
             if (location != null)
             {
-                shop.Location = $"{location.Coordinates?[0]} {location.Coordinates?[1]} {location.Coordinates?[2]}";
+                if(location.Coordinates.Length == 3)
+                    shop.Location = $"{location.Coordinates?[0]} {location.Coordinates?[1]} {location.Coordinates?[2]}";
                 shop.LocationDimension = location.Dimension;
                 shop.LocationDescription = location.Description;
             }
