@@ -18,18 +18,19 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="spinner-border" style="width: 12rem; height: 12rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div class="loading-progress-text"></div>
     </div>
 
-    <div id="blazor-error-ui">
+    <!--<div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
-    </div>
+    </div>-->
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <script>
