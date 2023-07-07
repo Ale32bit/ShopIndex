@@ -1,6 +1,12 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Globalization;
+@inherits LayoutComponentBase
 
 <PageTitle>Shop Index</PageTitle>
+
+@{
+    Console.WriteLine("The user culture is {0}", CultureInfo.CurrentCulture);
+}
+
 
 <div class="page">
     <div class="sidebar">

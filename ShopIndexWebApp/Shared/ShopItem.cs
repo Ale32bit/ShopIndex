@@ -1,4 +1,6 @@
 ﻿using ShopIndexWebApp.Shared.ShopSync;
+using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -30,16 +32,12 @@ public class ShopItem
     public static IEnumerable<ItemPrice> GetPrices(string pricesString)
     {
         var prices = new List<ItemPrice>();
-        Console.WriteLine("Parsing prices...");
-        Console.WriteLine(pricesString);
         var strPrices = pricesString.TrimEnd(';').Split(";");
-        Console.WriteLine(strPrices);
         foreach (var strPrice in strPrices)
         {
             var price = strPrice.Split(' ');
             var value = double.Parse(price[0]);
             var currency = price[1].TrimEnd(';');
-            Console.WriteLine("{0} {1} {2}", price, value, currency);
             prices.Add(new()
             {
                 Price = value,
