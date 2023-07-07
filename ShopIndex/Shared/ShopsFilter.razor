@@ -42,7 +42,7 @@
         }
     }
 
-    private ShopFilterSort _filterSort = ShopFilterSort.LastUpdate;
+    private ShopFilterSort _filterSort = ShopFilterSort.Alphabetical;
 
     [Parameter]
     public ShopFilterSort Sort
@@ -66,14 +66,14 @@
 
     public enum ShopFilterSort
     {
-        LastUpdate,
-        Alphabetical
+        Alphabetical,
+        UpdateDate,
     }
 
     private static Dictionary<ShopFilterSort, string> FilterSortLocale = new()
         {
-            [ShopFilterSort.LastUpdate] = "Last update",
-            [ShopFilterSort.Alphabetical] = "Name",
+            [ShopFilterSort.Alphabetical] = "Alphabetical",
+            [ShopFilterSort.UpdateDate] = "Recently updated",
         };
 
 }

@@ -3,10 +3,11 @@
     <div class="row g-0">
         <div class="col-md-9">
             <div class="card-body">
-
-                <h5 class="card-title m-0 p-0">
-                    @Item.Name
-                </h5>
+                <a href="/shop/@Shop.UID/item/@Item.Id" class="stretched-link text-decoration-none">
+                    <h5 class="card-title m-0 p-0 text-body">
+                        @Item.Name
+                    </h5>
+                </a>
 
                 @if (Item.ShopBuysItem)
                 {
@@ -24,14 +25,7 @@
                     </span>
                 }
 
-                @if (Clickable)
-                {
-                    <a href="/shop/@Shop.UID" class="text-body-secondary stretched-link fs-6 m-0 mb-1 p-0">@Shop.Name</a>
-                }
-                else
-                {
-                    <p class="text-body-secondary fs-6 m-0 mb-1 p-0">@Shop.Name</p>
-                }
+                <a href="/shop/@Shop.UID" class="card-text m-0 mb-1 p-0 fs-6 text-body-secondary z-2 position-relative">@Shop.Name</a>
 
                 @foreach (var price in Item.GetPrices())
                 {

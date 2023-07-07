@@ -34,7 +34,7 @@ else
     List<ShopItem> ItemList { get; set; } = new List<ShopItem>();
 
     private string SearchText { get; set; } = "";
-    private FilterSort FilterSort { get; set; } = FilterSort.None;
+    private FilterSort FilterSort { get; set; } = FilterSort.Alphabetical;
     private bool SellOnly { get; set; } = false;
 
     private IEnumerable<ShopItem> GetList()

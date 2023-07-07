@@ -15,7 +15,6 @@
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="sortSelect"><i class="fa-solid fa-sort"></i></label>
                             <select id="sortSelect" class="form-select" aria-label="Sort items by" @bind="Sort">
-                                <option selected value="None" disabled>Sort items</option>
                                 @foreach (var sortPair in FilterSortLocale)
                                 {
                                     <option value="@sortPair.Key">@sortPair.Value</option>
@@ -52,7 +51,7 @@
         }
     }
 
-    private FilterSort _filterSort = FilterSort.None;
+    private FilterSort _filterSort = FilterSort.Alphabetical;
 
     [Parameter]
     public FilterSort Sort
@@ -95,22 +94,22 @@
 
     public enum FilterSort
     {
-        None,
+        Alphabetical,
+        UpdateDate,
         LowPrice,
         HighPrice,
         LowStock,
         HighStock,
-        Alphabetical
     }
 
     private static Dictionary<FilterSort, string> FilterSortLocale = new()
         {
-            [FilterSort.None] = "None",
+            [FilterSort.Alphabetical] = "Alphabetical",
+            [FilterSort.UpdateDate] = "Recently updated",
             [FilterSort.LowPrice] = "Lowest price",
             [FilterSort.HighPrice] = "Highest price",
             [FilterSort.LowStock] = "Lowest stock",
             [FilterSort.HighStock] = "Highest stock",
-            [FilterSort.Alphabetical] = "Alphabetical",
         };
 
 }

@@ -34,7 +34,7 @@ else
     private IList<Models.Shop> shops;
 
     private string SearchText { get; set; } = "";
-    private ShopFilterSort FilterSort { get; set; } = ShopFilterSort.LastUpdate;
+    private ShopFilterSort FilterSort { get; set; } = ShopFilterSort.Alphabetical;
 
     private IEnumerable<Models.Shop> GetList()
     {
@@ -44,7 +44,7 @@ else
 
         switch (FilterSort)
         {
-            case ShopFilterSort.LastUpdate:
+            case ShopFilterSort.UpdateDate:
                 newList = newList.OrderByDescending(q => q.LastUpdate);
                 break;
             case ShopFilterSort.Alphabetical:
@@ -68,7 +68,7 @@ else
 
         using var db = DbFactory.CreateDbContext();
 
-        shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-12)).OrderByDescending(q => q.LastUpdate).ToListAsync();
+        shops = await db.Shops.Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-48)).OrderByDescending(q => q.LastUpdate).ToListAsync();
 
         // Development code
         /*if (shops == null)

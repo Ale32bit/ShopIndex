@@ -92,7 +92,7 @@ else
     public string[] Coords { get; set; }
 
     public string SearchText { get; set; } = "";
-    public FilterSort FilterSort { get; set; } = FilterSort.None;
+    public FilterSort FilterSort { get; set; } = FilterSort.Alphabetical;
     private bool SellOnly { get; set; } = false;
 
     private IEnumerable<Models.ShopItem> GetList()
