@@ -1,0 +1,85 @@
+﻿@page "/items";
+@using ShopIndexWebApp.Client.Shared;
+@using ShopIndexWebApp.Shared;
+@using static ShopIndexWebApp.Client.Shared.ItemsFilter;
+@inject HttpClient Http
+
+<PageTitle>Catalogue</PageTitle>
+
+<h1>Catalogue</h1>
+
+<ItemsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
+@bind-Sort="FilterSort" @bind-Sort:event="OnSort"
+@bind-SellOnly="SellOnly" @bind-SellOnly:event="OnSellOnlyChange" />
+
+@if (busy)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in GetList())
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <ItemCard Shop="ShopList.First(q => q.Id == item.ShopId)" Item="item" />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private bool busy;
+    IEnumerable<ShopIndexWebApp.Shared.ShopItem> ItemList { get; set; } = Enumerable.Empty<ShopIndexWebApp.Shared.ShopItem>();
+    IEnumerable<ShopIndexWebApp.Shared.Shop> ShopList { get; set; } = Enumerable.Empty<ShopIndexWebApp.Shared.Shop>();
+
+    private string SearchText { get; set; } = "";
+    private FilterSort FilterSort { get; set; } = FilterSort.Alphabetical;
+    private bool SellOnly { get; set; } = false;
+
+    private IEnumerable<ShopItem> GetList()
+    {
+        var newList = ItemList
+            .Where(q =>
+                q.Name.ToLower().Contains(SearchText.ToLower())
+                || q.Item.ToLower().Contains(SearchText.ToLower()))
+            .Where(q => SellOnly ? q.ShopBuysItem : true)
+            .OrderBy(q => q.Stock == 0);
+
+        switch (FilterSort)
+        {
+            case FilterSort.LowPrice:
+                newList = newList.ThenBy(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.HighPrice:
+                newList = newList.ThenByDescending(q => q.GetPrices().First().Price);
+                break;
+            case FilterSort.LowStock:
+                newList = newList.ThenBy(q => q.Stock);
+                break;
+            case FilterSort.HighStock:
+                newList = newList.ThenByDescending(q => q.Stock);
+                break;
+            case FilterSort.Alphabetical:
+                newList = newList.ThenBy(q => q.Name);
+                break;
+        }
+
+        return newList;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        busy = true;
+        ShopList = await Http.GetFromJsonAsync<IEnumerable<ShopIndexWebApp.Shared.Shop>>("API/Shop/Shops");
+        ItemList = (await Http.GetFromJsonAsync<IEnumerable<ShopItem>>("API/Shop/Shops/Items"))
+            .Where(q => ShopList.First(j => j.Id == q.ShopId).LastUpdate > DateTime.UtcNow.AddHours(-48))
+            .OrderByDescending(q => ShopList.First(j => j.Id == q.ShopId).LastUpdate);
+
+        busy = false;
+    }
+}
