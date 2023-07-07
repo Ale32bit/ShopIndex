@@ -56,9 +56,9 @@ namespace ShopIndex.API
                 FirstSeen = DateTime.UtcNow,
             };
 
-            if(shop.LastUpdate < DateTime.UtcNow.AddSeconds(-30))
+            if(shop.LastUpdate > DateTime.UtcNow.AddSeconds(-30))
             {
-                return Ok();
+                return BadRequest("Rate limited");
             }
 
             var location = data.Data.Info.Location;
