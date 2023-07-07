@@ -56,6 +56,11 @@ namespace ShopIndex.API
                 FirstSeen = DateTime.UtcNow,
             };
 
+            if(shop.LastUpdate < DateTime.UtcNow.AddSeconds(-30))
+            {
+                return Ok();
+            }
+
             var location = data.Data.Info.Location;
             shop.Name = data.Data.Info.Name;
             shop.Description = data.Data.Info.Description;
