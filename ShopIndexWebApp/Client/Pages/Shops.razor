@@ -11,9 +11,13 @@
 <ShopsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
 @bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
 
-@if (busy)
+@if (_busy)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
 else
 {
@@ -29,7 +33,7 @@ else
 }
 
 @code {
-    private bool busy;
+    private bool _busy;
     private IList<ShopIndexWebApp.Shared.Shop> shops;
 
     private string SearchText { get; set; } = "";
@@ -63,7 +67,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        busy = true;
+        _busy = true;
 
         shops = (await Http.GetFromJsonAsync<IEnumerable<ShopIndexWebApp.Shared.Shop>>($"API/Shop/Shops"))
             .Where(q => q.LastUpdate > DateTime.UtcNow.AddHours(-48))
@@ -94,6 +98,6 @@ else
             }
         }*/
 
-        busy = false;
+        _busy = false;
     }
 }

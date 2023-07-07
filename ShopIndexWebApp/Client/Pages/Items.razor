@@ -12,7 +12,7 @@
 @bind-Sort="FilterSort" @bind-Sort:event="OnSort"
 @bind-SellOnly="SellOnly" @bind-SellOnly:event="OnSellOnlyChange" />
 
-@if (busy)
+@if (_busy)
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
@@ -33,7 +33,7 @@ else
 }
 
 @code {
-    private bool busy;
+    private bool _busy;
     IEnumerable<ShopIndexWebApp.Shared.ShopItem> ItemList { get; set; } = Enumerable.Empty<ShopIndexWebApp.Shared.ShopItem>();
     IEnumerable<ShopIndexWebApp.Shared.Shop> ShopList { get; set; } = Enumerable.Empty<ShopIndexWebApp.Shared.Shop>();
 
@@ -74,12 +74,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        busy = true;
+        _busy = true;
         ShopList = await Http.GetFromJsonAsync<IEnumerable<ShopIndexWebApp.Shared.Shop>>("API/Shop/Shops");
         ItemList = (await Http.GetFromJsonAsync<IEnumerable<ShopItem>>("API/Shop/Shops/Items"))
             .Where(q => ShopList.First(j => j.Id == q.ShopId).LastUpdate > DateTime.UtcNow.AddHours(-48))
             .OrderByDescending(q => ShopList.First(j => j.Id == q.ShopId).LastUpdate);
 
-        busy = false;
+        _busy = false;
     }
 }

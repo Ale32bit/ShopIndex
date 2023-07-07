@@ -5,7 +5,15 @@
 @using static ShopIndexWebApp.Client.Shared.ItemsFilter;
 @inject HttpClient Http
 
-@if (Data is null)
+@if (_busy)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (Data is null)
 {
     <PageTitle>Shop not found</PageTitle>
     <h3>Shop not found! :(</h3>
@@ -91,6 +99,8 @@ else
     public List<ShopIndexWebApp.Shared.ShopItem> Items { get; set; }
     public string[] Coords { get; set; }
 
+    private bool _busy = true;
+
     public string SearchText { get; set; } = "";
     public FilterSort FilterSort { get; set; } = FilterSort.Alphabetical;
     private bool SellOnly { get; set; } = false;
@@ -128,6 +138,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        _busy = true;
+
         Data = await Http.GetFromJsonAsync<ShopIndexWebApp.Shared.Shop?>($"API/Shop/Shops/{UID}");
         if (Data == null)
             return;
@@ -142,5 +154,7 @@ else
         {
             Coords = Data.Location.Split(' ');
         }
+
+        _busy = false;
     }
 }

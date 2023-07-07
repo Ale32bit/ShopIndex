@@ -3,7 +3,15 @@
 @using static ShopIndexWebApp.Client.Shared.ItemsFilter;
 @inject HttpClient Http
 
-@if (Shop is null)
+@if (_busy)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (Shop is null)
 {
     <PageTitle>Shop not found</PageTitle>
     <h3>Shop not found! :(</h3>
@@ -110,11 +118,15 @@ else
     [Parameter]
     public int ItemID { get; set; }
 
+    private bool _busy = true;
+
     public ShopIndexWebApp.Shared.Shop? Shop { get; set; }
     public ShopIndexWebApp.Shared.ShopItem? Data { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        _busy = true;
+
         Shop = await Http.GetFromJsonAsync<ShopIndexWebApp.Shared.Shop?>($"API/Shop/Shops/{ShopUID}");
         if (Shop == null)
             return;
@@ -122,5 +134,7 @@ else
         Data = await Http.GetFromJsonAsync<ShopIndexWebApp.Shared.ShopItem?>($"API/Shop/Shops/{ShopUID}/Items/{ItemID}");
         if (Data == null)
             return;
+
+        _busy = false;
     }
 }
