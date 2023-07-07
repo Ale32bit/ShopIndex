@@ -36,7 +36,7 @@ public class ShopItem
         foreach (var strPrice in strPrices)
         {
             var price = strPrice.Split(' ');
-            var value = double.Parse(price[0]);
+            var value = double.Parse(price[0], CultureInfo.InvariantCulture);
             var currency = price[1].TrimEnd(';');
             prices.Add(new()
             {
