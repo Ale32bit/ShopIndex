@@ -56,7 +56,7 @@ namespace ShopIndexWebApp.Server.API
                 FirstSeen = DateTime.UtcNow,
             };
 
-            if(shop.LastUpdate > DateTime.UtcNow.AddSeconds(-30))
+            if(shop.LastUpdate > DateTime.UtcNow.AddSeconds(-15))
             {
                 return BadRequest("Rate limited");
             }
