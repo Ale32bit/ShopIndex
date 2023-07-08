@@ -38,4 +38,9 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
+var dbFactory = app.Services.GetRequiredService<IDbContextFactory<DataContext>>();
+using var db = await dbFactory.CreateDbContextAsync();
+await db.Database.MigrateAsync();
+await db.DisposeAsync();
+
 app.Run();
