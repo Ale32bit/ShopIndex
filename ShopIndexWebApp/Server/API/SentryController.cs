@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShopIndex.Data;
+using ShopIndexWebApp.Server.Data;
 using ShopIndexWebApp.Shared;
 using System.Data;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ShopIndex.API
+namespace ShopIndexWebApp.Server.API
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -66,6 +66,11 @@ namespace ShopIndex.API
             shop.Description = data.Data.Info.Description;
             shop.LastUpdate = DateTime.UtcNow;
             shop.Owner = data.Data.Info.Owner;
+
+            if (data.Coordinates.Count() == 3)
+            {
+                shop.ActualLocation = string.Join(' ', data.Coordinates);
+            }
 
             if (location != null)
             {

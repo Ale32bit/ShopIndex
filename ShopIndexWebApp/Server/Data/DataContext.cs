@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopIndexWebApp.Shared;
 
-namespace ShopIndex.Data
+namespace ShopIndexWebApp.Server.Data
 {
     public class DataContext : DbContext
     {

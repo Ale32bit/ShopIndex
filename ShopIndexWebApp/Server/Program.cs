@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using ShopIndex.Data;
+using ShopIndexWebApp.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

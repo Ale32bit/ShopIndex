@@ -11,6 +11,7 @@ public class Shop
     public DateTime FirstSeen { get; set; } = DateTime.UtcNow;
     public DateTime LastUpdate { get; set; }
     public string? Software { get; set; }
+    public string? ActualLocation { get; set; }
     public string? Location { get; set; }
     public string? LocationDimension { get; set; }
     public string? LocationDescription { get; set; }

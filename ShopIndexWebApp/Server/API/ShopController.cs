@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShopIndex.Data;
+using ShopIndexWebApp.Server.Data;
 using ShopIndexWebApp.Shared;
 
 namespace ShopIndexWebApp.Server.API
