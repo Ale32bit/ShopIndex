@@ -14,6 +14,7 @@ namespace ShopIndexWebApp.Server.API
     [ApiController]
     public class SentryController : ControllerBase
     {
+        public static DateTime? LastUpdate { get; private set; }
         public static readonly Dictionary<string, SentryUpload> Dumps = new();
 
         private readonly IConfiguration _configuration;
@@ -120,6 +121,8 @@ namespace ShopIndexWebApp.Server.API
 
             _context.SaveChangesFailed += _context_SaveChangesFailed;
             await _context.SaveChangesAsync();
+
+            LastUpdate = DateTime.UtcNow;
 
             return Ok();
         }

@@ -31,6 +31,7 @@
         <a class="dismiss">🗙</a>
     </div>-->
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/item.js"></script>
 
     <script>
         function loadBootstrap() {
@@ -39,6 +40,14 @@
 
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        }
+
+        function toggleItemModal() {
+            const modal = new bootstrap.Modal(document.getElementById('itemModal'))
+            if (modal) {
+                modal.toggle();
+            }
+
         }
     </script>
 

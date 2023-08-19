@@ -1,12 +1,14 @@
-﻿@page "/"
+﻿@page "/shops"
 @using static ShopIndexWebApp.Client.Shared.ShopsFilter;
 @using ShopIndexWebApp.Client.Shared;
 @using ShopIndexWebApp.Shared;
 @inject HttpClient Http
 
-<PageTitle>Recent shops</PageTitle>
+@implements IDisposable;
 
-<h1>Recent shops</h1>
+<PageTitle>Shops</PageTitle>
+
+<h1>Shops</h1>
 
 <ShopsFilter @bind-SearchText="SearchText" @bind-SearchText:event="OnSearchInput"
 @bind-Sort="FilterSort" @bind-Sort:event="OnSort" />
@@ -38,6 +40,8 @@ else
 
     private string SearchText { get; set; } = "";
     private ShopFilterSort FilterSort { get; set; } = ShopFilterSort.Alphabetical;
+
+    private System.Threading.Timer updateTimer;
 
     private IEnumerable<ShopIndexWebApp.Shared.Shop> GetList()
     {
@@ -74,6 +78,11 @@ else
             .OrderByDescending(q => q.LastUpdate)
             .ToList();
 
+        var timer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(StateHasChanged);
+        }, null, 0, 1000);
+
         // Development code
         /*if (shops == null)
         {
@@ -99,5 +108,10 @@ else
         }*/
 
         _busy = false;
+    }
+
+    public void Dispose()
+    {
+        updateTimer?.Dispose();
     }
 }

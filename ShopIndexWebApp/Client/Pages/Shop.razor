@@ -4,6 +4,7 @@
 @using ShopIndexWebApp.Shared;
 @using static ShopIndexWebApp.Client.Shared.ItemsFilter;
 @inject HttpClient Http
+@inject IJSRuntime JS;
 
 @if (_busy)
 {
@@ -88,10 +89,118 @@ else
     <div class="row">
         @foreach (var item in GetList())
         {
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                <ItemCard Shop="Data" Item="item" Clickable=false />
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div style="cursor: pointer;">
+                    <ItemCard Shop="Data" Item="item" @onclick="() => OpenItem(item)" />
+                </div>
             </div>
         }
+    </div>
+
+    <!-- Item Modal -->
+    <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            @if (SelectedItem != null && SelectedItemShop != null)
+            {
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="position-absolute top-0 end-0 z-1">
+                            <button type="button" class="btn-close p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="card border-0">
+                            <div class="row g-0">
+                                <div class="col-3">
+                                    <div class="position-relative top-50 start-50 translate-middle">
+                                        <img src="/assets/items/@(SelectedItem.Item.Replace(':', '/')).png"
+                                             class="img-thumbnail" alt="@SelectedItem.Item" title="@SelectedItem.Item">
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="card-body">
+                                        <h3 class="m-0 p-0 modal-title">@SelectedItem.Name</h3>
+                                        <p class="fs-5 text-secondary m-0">At <a class="text-secondary" target="_blank" href="/shop/@SelectedItemShop.UID">@SelectedItemShop.Name</a></p>
+                                        <p class="text-muted fst-italic m-0">@SelectedItem.Item</p>
+                                        @if (SelectedItemShop.Location != null)
+                                        {
+                                            var coords = SelectedItemShop.Location.Split(' ');
+                                            <div>
+                                                <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">DynMap</a>
+                                                <CopyClipboard Value="@(@$"\track {coords[0]} {coords[1]} {coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        @if (SelectedItem.Stock == 0 && !SelectedItem.MadeOnDemand)
+                        {
+                            <p class="text-danger fw-bold">This item is out of stock!</p>
+                        }
+
+                        <h4>Prices</h4>
+                        <ul>
+                            @foreach (var price in SelectedItem.GetPrices())
+                            {
+                                <li>
+                                    <span>@price.Price @price.Currency</span>
+                                    @if (price.Price % 1 > 0)
+                                    {
+                                        var dec = price.Price % 1;
+                                        var mul = 1 / dec;
+                                        var com = (int)(price.Price * mul);
+                                        var items = (int)(com / price.Price);
+                                        <span class="d-block">@com @price.Currency get@(com == 1 ? "s" : "") you @items item@(items != 1 ? "s" : "")</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+
+                        <h4>Details</h4>
+
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Stock</th>
+                                    <td>@(SelectedItem.Stock) pieces</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Dynamic price</th>
+                                    <td>@(SelectedItem.DynamicPrices ? "Yes" : "No")</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Shop buys this item</th>
+                                    <td>@(SelectedItem.ShopBuysItem ? "Yes" : "No")</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Made on demand</th>
+                                    <td>@(SelectedItem.MadeOnDemand ? "Yes. There might be delay when dispensing the item." : "No")</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">NBT hash</th>
+                                    @if (!string.IsNullOrEmpty(SelectedItem.NBT))
+                                    {
+                                        <td>@SelectedItem.NBT</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-muted fst-italic">None</td>
+                                    }
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 }
 
@@ -101,6 +210,9 @@ else
     public ShopIndexWebApp.Shared.Shop? Data { get; set; }
     public List<ShopIndexWebApp.Shared.ShopItem> Items { get; set; }
     public string[] Coords { get; set; }
+
+    private ShopItem? SelectedItem { get; set; }
+    private ShopIndexWebApp.Shared.Shop? SelectedItemShop { get => Data; }
 
     private bool _busy = true;
 
@@ -159,5 +271,18 @@ else
         }
 
         _busy = false;
+    }
+
+    private async Task OpenItem(ShopItem item)
+    {
+        SelectedItem = item;
+        try
+        {
+            await JS.InvokeVoidAsync("toggleItemModal");
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+        }
     }
 }
