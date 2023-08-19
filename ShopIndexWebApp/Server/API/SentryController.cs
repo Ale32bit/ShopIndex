@@ -25,6 +25,12 @@ namespace ShopIndexWebApp.Server.API
             _context = context;
         }
 
+        [HttpGet("lastUpdate")]
+        public DateTime? GetLastUpdate()
+        {
+            return LastUpdate;
+        }
+
         [HttpGet("dump/{uid}")]
         public IActionResult DumpShop(string uid)
         {

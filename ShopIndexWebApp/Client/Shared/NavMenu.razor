@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Humanizer;
+@inject HttpClient Http
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Shop Index <span class="badge bg-danger small">Beta</span></a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -27,12 +30,27 @@
     </nav>
 </div>
 
+@if (lastUpdate.HasValue)
+{
+    <div class="position-absolute bottom-0 start-0">
+        <p class="ps-2 text-light">Updated @lastUpdate?.Humanize()</p>
+    </div>
+}
+
+
 
 
 @code {
     private bool collapseNavMenu = true;
+    private DateTime? lastUpdate;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        lastUpdate = await Http.GetFromJsonAsync<DateTime?>($"API/Sentry/LastUpdate");
+
+    }
 
     private void ToggleNavMenu()
     {
