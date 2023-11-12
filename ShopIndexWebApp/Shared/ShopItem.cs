@@ -36,13 +36,24 @@ public class ShopItem
         foreach (var strPrice in strPrices)
         {
             var price = strPrice.Split(' ');
-            var value = double.Parse(price[0], CultureInfo.InvariantCulture);
-            var currency = price[1].TrimEnd(';');
-            prices.Add(new()
+            if (double.TryParse(price[0], CultureInfo.InvariantCulture, out var value))
             {
-                Price = value,
-                Currency = currency,
-            });
+                var currency = price[1].TrimEnd(';');
+                prices.Add(new()
+                {
+                    Price = value,
+                    Currency = currency,
+                });
+            }
+            else
+            {
+                // Can't be bothered with this fix...
+                prices.Add(new()
+                {
+                    Price = -1,
+                    Currency = "NaN",
+                });
+            }
         }
 
         return prices;

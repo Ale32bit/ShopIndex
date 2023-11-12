@@ -33,7 +33,7 @@
 @if (lastUpdate.HasValue)
 {
     <div class="position-absolute bottom-0 start-0">
-        <p class="ps-2 text-light">Updated @lastUpdate?.Humanize()</p>
+        <p class="ps-2 text-light">Updated @lastUpdate?.ToRelative()</p>
     </div>
 }
 

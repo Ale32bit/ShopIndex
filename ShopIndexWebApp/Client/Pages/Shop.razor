@@ -36,10 +36,10 @@ else
         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
             <div class="row">
                 <div class="col-sm-12 col-md-6 fw-bold">Last seen</div>
-                <div class="col-sm-12 col-md-6">@Data.LastUpdate.Humanize(utcDate: true)</div>
+                <div class="col-sm-12 col-md-6">@Data.LastUpdate.ToRelative()</div>
 
                 <div class="col-sm-12 col-md-6 fw-bold">First seen</div>
-                <div class="col-sm-12 col-md-6">@Data.FirstSeen.Humanize(utcDate: true)</div>
+                <div class="col-sm-12 col-md-6">@Data.FirstSeen.ToRelative()</div>
 
                 @if (Data.Software != null)
                 {
