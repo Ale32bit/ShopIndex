@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using ShopIndexWebApp.Server;
 using ShopIndexWebApp.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ else
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+app.UseNotFoundImageMiddleware();
 
 app.UseRouting();
 
