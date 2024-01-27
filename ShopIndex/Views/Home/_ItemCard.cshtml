@@ -1,0 +1,43 @@
+﻿@model ShopIndex.Models.ShopItem
+
+<div class="card m-1 @(Model.Stock == 0 ? "bg-body-secondary" : "")">
+    <div class="row g-0">
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title m-0 p-0 text-body">
+                    @Model.Name
+                </h5>
+
+                @if (Model.ShopBuysItem)
+                {
+                    <span class="badge rounded-pill bg-danger small position-absolute top-0 end-0 m-1 z-2"
+                          title="This shop buys items">
+                        SELL
+                    </span>
+                }
+
+                @if (Model.DynamicPrices)
+                {
+                    <span class="badge rounded-pill bg-primary small position-absolute bottom-0 end-0 m-1 z-2"
+                          title="Price may change">
+                        Dynamic price
+                    </span>
+                }
+
+                <p class="card-text m-0 mb-1 p-0 fs-6 text-body-secondary">@Model.Shop.Name</p>
+
+                @foreach (var price in Model.GetPrices())
+                {
+                    <h6 class="card-subtitle mb-2">@price.Price @price.Currency</h6>
+                }
+                <p class="card-text">Stock: <span class="@(Model.Stock == 0 ? "text-danger" : "")">@Model.Stock</span></p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="position-relative top-50 start-50 translate-middle">
+                <img src="/assets/items/@(Model.Item.Replace(':', '/')).png" loading="lazy"
+                     class="img-fluid" alt="@Model.Item" title="@Model.Item">
+            </div>
+        </div>
+    </div>
+</div>

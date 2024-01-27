@@ -1,0 +1,94 @@
+﻿@model ShopIndex.Models.Shop
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var items = ViewData["Items"] as IEnumerable<ShopItem>;
+    var coords = Model.Location?.Split(' ');
+}
+
+<div class="container">
+
+    <h3>
+        @Model.Name
+        @if (Model.Owner != null)
+        {
+            <span class="fs-6 text-secondary"> by @Model.Owner</span>
+        }
+    </h3>
+
+    <p class="fs-5 my-1">@Model.Description</p>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 fw-bold">Last seen</div>
+                <div class="col-sm-12 col-md-6">@Model.LastUpdate.ToRelative()</div>
+
+                <div class="col-sm-12 col-md-6 fw-bold">First seen</div>
+                <div class="col-sm-12 col-md-6">@Model.FirstSeen.ToRelative()</div>
+
+                @if (Model.Software != null)
+                {
+                    <div class="col-sm-12 col-md-6 fw-bold">Software</div>
+                    <div class="col-sm-12 col-md-6">@Model.Software</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4>Location</h4>
+
+    @if (Model.Location != null)
+    {
+        <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">DynMap</a>
+        <CopyClipboard Value="@(@$"\track {coords[0]} {coords[1]} {coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard>
+    }
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 fw-bold">Coordinates</div>
+                <div class="col-sm-12 col-md-6">@(Model.Location ?? "No data")</div>
+
+                <div class="col-sm-12 col-md-6 fw-bold">Dimension</div>
+                <div class="col-sm-12 col-md-6">@(Model.LocationDimension ?? "No data")</div>
+
+                <div class="col-sm-12 col-md-6 fw-bold">Description</div>
+                <div class="col-sm-12 col-md-6">@(Model.LocationDescription ?? "No data")</div>
+
+                <div class="col-sm-12 col-md-6 fw-bold">Transmission location</div>
+                <div class="col-sm-12 col-md-6">@(Model.ActualLocation ?? "No data")</div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4>Items</h4>
+
+    <div class="row">
+        @foreach (var item in items)
+        {
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div style="cursor: pointer;" hx-get="/Home/GetItem/@item.Id" hx-target="#modal-container" hx-trigger="click" data-bs-toggle="modal"
+                     data-bs-target="#modal-container">
+                    <partial name="_ItemCard" model="item" />
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<div id="modal-container"
+     class="modal fade"
+     style="display: none"
+     aria-hidden="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>

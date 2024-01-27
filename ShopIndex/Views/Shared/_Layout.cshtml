@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShopIndex</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ShopIndex.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="bg-dark">
+        <div class="container">
+            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-4">
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="d-inline-flex link-body-emphasis text-decoration-none text-light fw-bold fs-3">
+                        ShopIndex
+                    </a>
+                </div>
+
+                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                    <li>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                            <img src="~/icons/cart.svg" alt="Shopping Cart" width="24" class="bi d-block mx-auto mb-1" />
+                            Catalogue
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Shops">
+                            <img src="~/icons/shop-window.svg" alt="Shopping Cart" width="24" class="bi d-block mx-auto mb-1" />
+                            Shops
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Help">
+                            <img src="~/icons/question.svg" alt="Shopping Cart" width="24" class="bi d-block mx-auto mb-1" />
+                            Help
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="col-md-3 text-end">
+                    <p class="visually-hidden">
+                        Whoa, oh, oh
+                        Whoa, oh, oh
+                        Whoa, oh, oh
+                        Whoa
+                        I'm waking up to ash and dust
+                        I wipe my brow and I sweat my rust
+                        I'm breathing in the chemicals
+                        I'm breaking in, shaping up, then checking out on the prison bus
+                        This is it, the apocalypse
+                        Whoa
+                        I'm waking up, I feel it in my bones
+                        Enough to make my systems blow
+                        Welcome to the new age, to the new age
+                        Welcome to the new age, to the new age
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                        I raise my flags, don my clothes
+                        It's a revolution, I suppose
+                        We'll paint it red to fit right in
+                        Whoa
+                        I'm breaking in, shaping up, then checking out on the prison bus
+                        This is it, the apocalypse
+                        Whoa
+                        I'm waking up, I feel it in my bones
+                        Enough to make my systems blow
+                        Welcome to the new age, to the new age
+                        Welcome to the new age, to the new age
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                        All systems go, the sun hasn't died
+                        Deep in my bones, straight from inside
+                        I'm waking up, I feel it in my bones
+                        Enough to make my systems blow
+                        Welcome to the new age, to the new age
+                        Welcome to the new age, to the new age
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                        Whoa, oh, oh, oh, oh, whoa, oh, oh, oh, I'm radioactive, radioactive
+                    </p>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/htmx.org/dist/htmx.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

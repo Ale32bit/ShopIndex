@@ -1,0 +1,83 @@
+﻿@model List<ShopIndex.Models.ShopItem>
+
+@{
+    ViewData["Title"] = "Home Page";
+
+    var filter = ViewData["Filter"] as ItemFilter ?? new ItemFilter()
+            {
+                Sort = ItemFilter.FilterSort.Alphabetical
+            };
+}
+
+<div class="text-center">
+    <h2>Catalogue</h2>
+</div>
+
+<hr />
+
+<div class="container">
+    <div class="card m-1">
+        <div class="card-body">
+            <h5 class="card-title">Filter</h5>
+            <div class="row">
+                <form hx-get="/Home/GetItems" hx-trigger="change" hx-indicator=".htmx-indicator" hx-target="#items-list" onsubmit="return false;">
+                    <div class="col-sm-12">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+                            <input type="search" name="search" class="form-control" placeholder="Search item..." aria-label="Search item"
+                                   hx-trigger="input changed delay:500ms, search" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group mb-3">
+                                    <label class="input-group-text" for="sortSelect"><i class="fa-solid fa-sort"></i></label>
+                                    <select class="form-select" name="sort" aria-label="Sort items by">
+                                        @foreach (var sort in Enum.GetValues<ItemFilter.FilterSort>())
+                                        {
+                                            <option value="@((int)sort)">@sort.GetName()</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="sellonly" id="sellOnly">
+                                    <label class="form-check-label" for="sellOnly">Only show sell items</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="htmx-indicator text-center">
+    <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="items-list" class="row g-0">
+    <div class="visually-hidden" hx-get="/Home/GetItems?page=1&@filter.Unpack()" hx-target="#items-list" hx-trigger="revealed" hx-swap="beforeend" hx-indicator=".htmx-indicator"></div>
+</div>
+
+<div class="htmx-indicator text-center">
+    <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="modal-container"
+     class="modal fade"
+     style="display: none"
+     aria-hidden="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿@model ShopIndex.Models.ShopItem
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">@Model.Name</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="card border-0">
+                <div class="row g-0">
+                    <div class="col-3">
+                        <div class="position-relative top-50 start-50 translate-middle">
+                            <img src="/assets/items/@(Model.Item.Replace(':', '/')).png"
+                                 class="img-thumbnail" alt="@Model.Item" title="@Model.Item">
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="card-body">
+                            <p class="fs-5 text-secondary m-0">At <a class="text-secondary" target="_blank" href="/Home/Shops/@Model.Shop.UID">@Model.Shop.Name</a></p>
+                            <p class="text-muted fst-italic m-0">@Model.Item</p>
+                            @if (Model.Shop.Location != null)
+                            {
+                                var coords = Model.Shop.Location.Split(' ');
+                                <div>
+                                    <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">DynMap</a>
+                                    <button tabindex="0"
+                                            onclick="navigator.clipboard.writeText('@(@$"\\track {coords[0]} {coords[1]} {coords[2]}")')"
+                                            data-bs-toggle="popover" data-bs-content="Copied!" data-bs-trigger="focus"
+                                            class="btn btn-primary btn-sm z-2 position-relative">
+                                        &bsol;track
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @if (Model.Stock == 0 && !Model.MadeOnDemand)
+            {
+                <p class="text-danger fw-bold">This item is out of stock!</p>
+            }
+
+            <h4>Prices</h4>
+            <ul>
+                @foreach (var price in Model.GetPrices())
+                {
+                    <li>
+                        <span>@price.Price @price.Currency</span>
+                        @if (price.Price % 1 > 0)
+                        {
+                            var dec = price.Price % 1;
+                            var mul = 1 / dec;
+                            var com = (int)(price.Price * mul);
+                            var items = (int)(com / price.Price);
+                            <span class="d-block">@com @price.Currency get@(com == 1 ? "s" : "") you @items item@(items != 1 ? "s" : "")</span>
+                        }
+                    </li>
+                }
+            </ul>
+
+            <h4>Details</h4>
+
+            <table class="table table-sm table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Stock</th>
+                        <td>@(Model.Stock) pieces</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Dynamic price</th>
+                        <td>@(Model.DynamicPrices ? "Yes" : "No")</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Shop buys this item</th>
+                        <td>@(Model.ShopBuysItem ? "Yes" : "No")</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Made on demand</th>
+                        <td>@(Model.MadeOnDemand ? "Yes. There might be delay when dispensing the item." : "No")</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">NBT hash</th>
+                        @if (!string.IsNullOrEmpty(Model.NBT))
+                        {
+                            <td>@Model.NBT</td>
+                        }
+                        else
+                        {
+                            <td class="text-muted fst-italic">None</td>
+                        }
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

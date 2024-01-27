@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ShopIndex.Models.ShopItem>
+
+@{
+    var nextPage = ((int?)ViewData["Page"] ?? -1) + 1;
+
+    var filter = ViewData["Filter"] as ItemFilter ?? new ItemFilter()
+            {
+                Sort = ItemFilter.FilterSort.Alphabetical
+            };
+
+    var last = Model.LastOrDefault();
+}
+
+@foreach (var item in Model)
+{
+    <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+        <div style="cursor: pointer;" hx-get="/Home/GetItem/@item.Id" hx-target="#modal-container" hx-trigger="click" data-bs-toggle="modal"
+             data-bs-target="#modal-container">
+            <partial name="_ItemCard" model="item" />
+        </div>
+        @if (item == last && nextPage != 0)
+        {
+            <span hx-get="/Home/GetItems?page=@nextPage&@filter.Unpack()" hx-target="#items-list"
+                  hx-trigger="revealed" hx-swap="beforeend" hx-indicator=".htmx-indicator"></span>
+        }
+    </div>
+}
