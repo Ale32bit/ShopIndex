@@ -38,6 +38,10 @@
                 </div>
             </div>
 
+            @if(!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
 
 
             @if (Model.Stock == 0 && !Model.MadeOnDemand)

@@ -50,7 +50,7 @@ namespace ShopIndex.API
 
             var sourceUID = data.GetUID();
             Dumps[sourceUID] = data;
-            
+
             var shop = await _context.Shops.FirstOrDefaultAsync(q => q.UID == sourceUID);
             shop ??= new Shop()
             {
@@ -59,7 +59,7 @@ namespace ShopIndex.API
                 FirstSeen = DateTime.UtcNow,
             };
 
-            if(shop.LastUpdate > DateTime.UtcNow.AddSeconds(-15))
+            if (shop.LastUpdate > DateTime.UtcNow.AddSeconds(-15))
             {
                 return BadRequest("Rate limited");
             }
@@ -77,7 +77,7 @@ namespace ShopIndex.API
 
             if (location != null)
             {
-                if(location.Coordinates.Length == 3)
+                if (location.Coordinates.Length == 3)
                     shop.Location = $"{location.Coordinates?[0]} {location.Coordinates?[1]} {location.Coordinates?[2]}";
                 shop.LocationDimension = location.Dimension;
                 shop.LocationDescription = location.Description;
@@ -106,6 +106,7 @@ namespace ShopIndex.API
                 };
 
                 shopItem.Name = item.Item.DisplayName;
+                shopItem.Description = item.Item.Description;
                 shopItem.Stock = item.Stock ?? -1;
                 shopItem.PricesString = ShopItem.MakePricesString(item.Prices);
                 shopItem.DynamicPrices = item.DynamicPrice;

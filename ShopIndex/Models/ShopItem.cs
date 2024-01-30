@@ -12,6 +12,7 @@ public class ShopItem
     public int Id { get; set; }
     public int ShopId { get; set; }
     public string Name { get; set; }
+    public string? Description { get; set; }
     public string Item { get; set; }
     public string? NBT { get; set; }
     public string Hash => GetItemHash(Name, Item, NBT, DynamicPrices, MadeOnDemand, ShopBuysItem);
