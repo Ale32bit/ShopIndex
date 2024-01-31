@@ -75,6 +75,8 @@ namespace ShopIndex.API
                 shop.ActualLocation = string.Join(' ', data.Coordinates);
             }
 
+            shop.ActualDimension = data.Dimension;
+
             if (location != null)
             {
                 if (location.Coordinates.Length == 3)

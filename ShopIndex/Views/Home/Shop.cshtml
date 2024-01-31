@@ -60,7 +60,11 @@
                 <div class="col-sm-12 col-md-6">@(Model.LocationDescription ?? "No data")</div>
 
                 <div class="col-sm-12 col-md-6 fw-bold">Transmission location</div>
-                <div class="col-sm-12 col-md-6">@(Model.ActualLocation ?? "No data")</div>
+                <div class="col-sm-12 col-md-6">
+                    <span>@(Model.ActualLocation ?? "No data")</span>
+                    <span class="text-muted"> @@ </span>
+                    <span>@(Model.ActualDimension)</span>
+                </div>
             </div>
         </div>
     </div>
