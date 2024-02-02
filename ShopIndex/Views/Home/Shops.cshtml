@@ -1,10 +1,22 @@
 ﻿@model IEnumerable<Shop>
 
-<div class="row">
-    @foreach (var shop in Model)
-    {
-        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-            <partial name="_ShopCard" model="shop" />
-        </div>
-    }
+@{
+    ViewData["Title"] = "Shops";
+}
+
+<div class="text-center">
+    <h2>Shops</h2>
+</div>
+
+<hr />
+
+<div class="container">
+    <div class="row">
+        @foreach (var shop in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <partial name="_ShopCard" model="shop" />
+            </div>
+        }
+    </div>
 </div>

@@ -19,17 +19,21 @@
     <div class="card m-1">
         <div class="card-body">
             <h5 class="card-title">Filter</h5>
-            <div class="row">
-                <form hx-get="/Home/GetItems" hx-trigger="change" hx-indicator=".htmx-indicator" hx-target="#items-list" onsubmit="return false;">
-                    <div class="col-sm-12">
+            <form hx-get="/Home/GetItems" hx-trigger="change" hx-indicator=".htmx-indicator" hx-target="#items-list" onsubmit="return false;">
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
                             <input type="search" name="search" class="form-control" placeholder="Search item..." aria-label="Search item"
                                    hx-trigger="input changed delay:500ms, search" />
+
+                            <!-- this button does absolutely nothing lol -->
+                            <button class="btn btn-outline-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="row">
                             <div class="col-sm-12 col-md-6">
                                 <div class="input-group mb-3">
@@ -42,7 +46,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-6">
+                            <div class="col-auto">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch" name="sellonly" id="sellOnly">
                                     <label class="form-check-label" for="sellOnly">Only show sell items</label>
@@ -50,27 +54,23 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
 
-<div class="htmx-indicator text-center">
-    <div class="spinner-border text-dark" role="status">
-        <span class="visually-hidden">Loading...</span>
+    <div id="items-list" class="row g-0">
+        <div class="visually-hidden" hx-get="/Home/GetItems?page=1&@filter.Unpack()" hx-target="#items-list" hx-trigger="revealed" hx-swap="beforeend" hx-indicator=".htmx-indicator"></div>
     </div>
-</div>
 
-<div id="items-list" class="row g-0">
-    <div class="visually-hidden" hx-get="/Home/GetItems?page=1&@filter.Unpack()" hx-target="#items-list" hx-trigger="revealed" hx-swap="beforeend" hx-indicator=".htmx-indicator"></div>
-</div>
-
-<div class="htmx-indicator text-center">
-    <div class="spinner-border text-dark" role="status">
-        <span class="visually-hidden">Loading...</span>
+    <div class="htmx-indicator text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
+
 </div>
+
 
 <div id="modal-container"
      class="modal fade"
