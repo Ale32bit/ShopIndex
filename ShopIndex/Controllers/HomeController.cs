@@ -73,8 +73,8 @@ public class HomeController : Controller
 
         var itemsQuery = _context.Items
             .Include(q => q.Shop)
-            .Where(q => q.Name.ToLower().Contains(filter.Search)
-            || q.Item.ToLower().Contains(filter.Search))
+            .Where(q => q.Name.ToLower().Contains(filter.Search.ToLower())
+            || q.Item.ToLower().Contains(filter.Search.ToLower()))
             .Where(q => filter.SellOnly ? q.ShopBuysItem : true)
             .AsEnumerable()
             .OrderBy(q => q.Stock == 0);
