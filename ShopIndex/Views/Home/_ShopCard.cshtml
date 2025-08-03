@@ -17,13 +17,17 @@
         @if (!string.IsNullOrWhiteSpace(Model.Location))
         {
             var coords = Model.Location.Split(' ');
-            <a class="btn btn-primary btn-sm z-2 position-relative" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">Locate</a>
-            <button tabindex="0"
-                    onclick="navigator.clipboard.writeText('@(@$"\\track {coords[0]} {coords[1]} {coords[2]}")')"
-                    data-bs-toggle="popover" data-bs-content="Copied!" data-bs-trigger="focus"
-                    class="btn btn-primary btn-sm z-2 position-relative">
-                &bsol;track
-            </button>
+            var link = Shared.MapLink
+                .Replace("{X}", coords[0])
+                .Replace("{Y}", coords[1])
+                .Replace("{Z}", coords[2]);
+            <a class="btn btn-primary btn-sm z-2 position-relative" target="_blank" href="@link">Locate</a>
+            @* <button tabindex="0" *@
+            @*         onclick="navigator.clipboard.writeText('@(@$"\\track {coords[0]} {coords[1]} {coords[2]}")')" *@
+            @*         data-bs-toggle="popover" data-bs-content="Copied!" data-bs-trigger="focus" *@
+            @*         class="btn btn-primary btn-sm z-2 position-relative"> *@
+            @*     &bsol;track *@
+            @* </button> *@
         }
     </div>
 </div>

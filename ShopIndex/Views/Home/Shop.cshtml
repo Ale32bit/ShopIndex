@@ -43,8 +43,12 @@
 
     @if (Model.Location != null)
     {
-        <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">DynMap</a>
-        <CopyClipboard Value="@(@$"\track {coords[0]} {coords[1]} {coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard>
+        var link = Shared.MapLink
+            .Replace("{X}", coords[0])
+            .Replace("{Y}", coords[1])
+            .Replace("{Z}", coords[2]);
+        <a class="btn btn-primary btn-sm" target="_blank" href="@link">Map</a>
+        @* <CopyClipboard Value="@(@$"\track {coords[0]} {coords[1]} {coords[2]}")"><button class="btn btn-primary btn-sm">&bsol;track</button></CopyClipboard> *@
     }
 
     <div class="row">

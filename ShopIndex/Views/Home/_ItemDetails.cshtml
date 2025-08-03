@@ -23,14 +23,18 @@
                             @if (Model.Shop.Location != null)
                             {
                                 var coords = Model.Shop.Location.Split(' ');
+                                var link = Shared.MapLink
+                                    .Replace("{X}", coords[0])
+                                    .Replace("{Y}", coords[1])
+                                    .Replace("{Z}", coords[2]);
                                 <div>
-                                    <a class="btn btn-primary btn-sm" target="_blank" href="https://dynmap.sc3.io/?worldname=SwitchCraft&mapname=flat&zoom=7&x=@coords[0]&y=@coords[1]&z=@coords[2]">DynMap</a>
-                                    <button tabindex="0"
-                                            onclick="navigator.clipboard.writeText('@(@$"\\track {coords[0]} {coords[1]} {coords[2]}")')"
-                                            data-bs-toggle="popover" data-bs-content="Copied!" data-bs-trigger="focus"
-                                            class="btn btn-primary btn-sm z-2 position-relative">
-                                        &bsol;track
-                                    </button>
+                                    <a class="btn btn-primary btn-sm" target="_blank" href="@link">DynMap</a>
+                                    @* <button tabindex="0" *@
+                                    @*         onclick="navigator.clipboard.writeText('@(@$"\\track {coords[0]} {coords[1]} {coords[2]}")')" *@
+                                    @*         data-bs-toggle="popover" data-bs-content="Copied!" data-bs-trigger="focus" *@
+                                    @*         class="btn btn-primary btn-sm z-2 position-relative"> *@
+                                    @*     &bsol;track *@
+                                    @* </button> *@
                                 </div>
                             }
                         </div>
